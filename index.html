@@ -3,34 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Opening browser...</title>
+  <title>Verifying Connection...</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #0b0b0b;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: #161616;
+      border: 1px solid #282828;
+      border-radius: 14px;
+      padding: 28px;
+      max-width: 320px;
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .progress-bar {
+      width: 100%;
+      background-color: #282828;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    .progress {
+      width: 0%;
+      height: 8px;
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      transition: width 0.1s linear;
+    }
+    .btn {
+      display: none; /* Appears only when verification finishes */
+      width: 100%;
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      color: #000;
+      font-weight: bold;
+      padding: 14px 0;
+      border-radius: 30px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <p>Opening browser...</p>
+
+  <div class="card">
+    <h2 id="status">Verifying Secure Access...</h2>
+    <p id="subtext">Please wait 3 seconds while we verify your browser.</p>
+    
+    <div class="progress-bar" id="bar-container">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <button id="launchBtn" class="btn">Click Here to Continue</button>
+  </div>
 
   <script>
-    (function () {
-      var targetUrl =
-        "https://asiafilm.org/4/52b5dc35d17cbe47a4bc7c296c0f5010";
+    var rawAdsterraLink = "https://asiafilm.org/4/52b5dc35d17cbe47a4bc7c296c0f5010"; // REPLACE THIS
+    var duration = 3000; // 3 SECONDS (Optimal for retaining 95%+ of traffic)
+    var progress = document.getElementById("progress");
+    var startTime = Date.now();
 
-      var ua = navigator.userAgent || "";
-      var isAndroid = /Android/i.test(ua);
-      var isTikTok = /TikTok|Bytedance/i.test(ua);
+    var timer = setInterval(function() {
+      var elapsed = Date.now() - startTime;
+      var percent = Math.min((elapsed / duration) * 100, 100);
+      progress.style.width = percent + "%";
 
-      if (isAndroid && isTikTok) {
-        var cleanUrl = targetUrl.replace(/^https?:\/\//i, "");
-
-        var intentUrl =
-          "intent://" + cleanUrl +
-          "#Intent;scheme=https;" +
-          "action=android.intent.action.VIEW;" +
-          "package=com.android.chrome;end";
-
-        window.location.href = intentUrl;
-      } else {
-        window.location.replace(targetUrl);
+      if (elapsed >= duration) {
+        clearInterval(timer);
+        document.getElementById("status").innerText = "Access Ready!";
+        document.getElementById("subtext").innerText = "Tap below to view content in browser.";
+        document.getElementById("bar-container").style.display = "none";
+        document.getElementById("launchBtn").style.display = "block";
       }
-    })();
+    }, 100);
+
+    document.getElementById("launchBtn").addEventListener("click", function() {
+      var ua = navigator.userAgent || navigator.vendor || window.opera;
+      var isAndroid = /android/i.test(ua);
+      var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+
+      if (isAndroid) {
+        var cleanUrl = rawAdsterraLink.replace(/^https?:\/\//, '');
+        var intentUrl = "intent://" + cleanUrl + "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" + encodeURIComponent(rawAdsterraLink) + ";end;";
+        window.location.href = intentUrl;
+      } else if (isIOS) {
+        window.open(rawAdsterraLink, '_blank');
+      } else {
+        window.location.href = rawAdsterraLink;
+      }
+    });
   </script>
+
 </body>
 </html>
