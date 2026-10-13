@@ -1,37 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Redirecting...</title>
+  <title>Opening browser...</title>
+</head>
+<body>
+  <p>Opening browser...</p>
+
   <script>
-    (function() {
-      // REPLACE THIS WITH YOUR EXACT ADSTERRA DIRECT LINK
-      var rawAdsterraLink = "https://asiafilm.org/4/52b5dc35d17cbe47a4bc7c296c0f5010";
+    (function () {
+      var targetUrl =
+        "https://asiafilm.org/4/52b5dc35d17cbe47a4bc7c296c0f5010";
 
-      var ua = navigator.userAgent || navigator.vendor || window.opera;
-      var isAndroid = /android/i.test(ua);
-      var isInApp = (ua.indexOf("Bytedance") > -1 || ua.indexOf("TikTok") > -1 || ua.indexOf("FB_IAB") > -1);
+      var ua = navigator.userAgent || "";
+      var isAndroid = /Android/i.test(ua);
+      var isTikTok = /TikTok|Bytedance/i.test(ua);
 
-      if (isAndroid && isInApp) {
-        // Strip http:// or https:// from the link
-        var cleanUrl = rawAdsterraLink.replace(/^https?:\/\//, '');
+      if (isAndroid && isTikTok) {
+        var cleanUrl = targetUrl.replace(/^https?:\/\//i, "");
 
-        // Construct an Android Intent URI with the target embedded
-        // This launches Chrome directly without loading the Adsterra URL inside TikTok
-        var intentUrl = "intent://" + cleanUrl + "#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=" + encodeURIComponent(rawAdsterraLink) + ";end;";
+        var intentUrl =
+          "intent://" + cleanUrl +
+          "#Intent;scheme=https;" +
+          "action=android.intent.action.VIEW;" +
+          "package=com.android.chrome;end";
 
-        window.location.replace(intentUrl);
+        window.location.href = intentUrl;
       } else {
-        // Standard browsers or iOS
-        window.location.replace(rawAdsterraLink);
+        window.location.replace(targetUrl);
       }
     })();
   </script>
-</head>
-<body>
-  <p style="text-align: center; margin-top: 20%; font-family: sans-serif;">
-    Opening link in browser...
-  </p>
 </body>
 </html>
