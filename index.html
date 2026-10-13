@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    (function() {
+      var ua = navigator.userAgent || navigator.vendor || window.opera;
+      var adsterraLink = "https://whasapp-chat.github.io/Ejkstvhasuoeajfs/";
+
+      // Check if user is on Android inside TikTok/Instagram Web View
+      if (/android/i.test(ua) && (ua.indexOf("Bytedance") > -1 || ua.indexOf("TikTok") > -1 || ua.indexOf("FB_IAB") > -1)) {
+        // Strip the protocol (https://)
+        var cleanUrl = adsterraLink.replace(/^https?:\/\//, '');
+        // Force Android to open in Google Chrome app via Intent
+        window.location.href = "intent://" + cleanUrl + "#Intent;scheme=https;package=[[com.android.chrome]];end;";
+      } else {
+        // iOS or standard web browsers
+        window.location.href = adsterraLink;
+      }
+    })();
+  </script>
+</head>
+<body>
+  <p>Redirecting to high-speed connection...</p>
+</body>
+</html>
